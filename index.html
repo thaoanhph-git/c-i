@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="vi">
 <head>
@@ -29,7 +30,20 @@
 <script id="wedding-config">
 /* ▼▼▼ BẮT ĐẦU CONFIG — SỬA TỪ ĐÂY ▼▼▼ */
 var CONFIG = {
-  "version": 2,
+  "version": 3,
+
+  /* ── Giao diện: màu & phông chữ ──────────────────────────────── */
+  /* Sửa dễ nhất bằng bảng chỉnh sửa (?edit=1) → mục "Giao diện":   */
+  /* có sẵn 4 preset bấm là đổi, hoặc tự chọn từng màu.             */
+  "theme": {
+    "main":       "#5D6B2C",        /* màu chính: tiêu đề phụ, nút, chân trang */
+    "accent":     "#C0A0EC",        /* điểm nhấn: băng dính, nhãn nhỏ          */
+    "mark":       "#D98D97",        /* nét gạch chân viết tay, dấu &           */
+    "paper":      "#F2EDE0",        /* nền giấy                               */
+    "ink":        "#26261F",        /* màu chữ                                */
+    "fontScript": "Dancing Script", /* phông chữ viết tay (tiêu đề)           */
+    "fontBody":   "IBM Plex Mono"   /* phông chữ nội dung                     */
+  },
 
   /* ── Cô dâu & chú rể ─────────────────────────────────────────── */
   "bride":        "Thảo Anh",
@@ -133,9 +147,17 @@ var CONFIG = {
   /* ── Mừng cưới ───────────────────────────────────────────────── */
   "giftScript": "Hộp mừng cưới",
   "giftNote":   "Sự có mặt của bạn đã là món quà quý nhất. Nếu bạn muốn gửi thêm chút yêu thương, chúng mình xin phép để thông tin ở đây.",
+  /* Điền "bankCode" + "number" là thiệp TỰ SINH mã QR chuyển khoản,
+     không cần chụp ảnh QR. Mã ngân hàng hay dùng:
+       VCB Vietcombank · TCB Techcombank · MB MBBank   · ACB ACB
+       ICB VietinBank  · BIDV BIDV       · VBA Agribank · TPB TPBank
+       VPB VPBank      · STB Sacombank   · VIB VIB      · SHB SHB
+       HDB HDBank      · MSB MSB         · OCB OCB      · SEAB SeABank
+     Muốn dùng ảnh QR tự chụp thì điền đường dẫn ảnh vào ô "qr",
+     ảnh đó sẽ được dùng thay cho QR tự sinh. */
   "giftAccounts": [
-    { "who": "Cô dâu", "bank": "Ngân hàng ...", "name": "PHAM THAO ANH", "number": "0000 0000 0000", "qr": "" },
-    { "who": "Chú rể", "bank": "Ngân hàng ...", "name": "PHAM DUC DAO",  "number": "0000 0000 0000", "qr": "" }
+    { "who": "Cô dâu", "bankCode": "", "bank": "Ngân hàng ...", "name": "PHAM THAO ANH", "number": "0000 0000 0000", "qr": "" },
+    { "who": "Chú rể", "bankCode": "", "bank": "Ngân hàng ...", "name": "PHAM DUC DAO",  "number": "0000 0000 0000", "qr": "" }
   ],
 
   /* ── Hỏi đáp ─────────────────────────────────────────────────── */
@@ -151,8 +173,9 @@ var CONFIG = {
   "rsvpScript":   "Xác nhận tham dự",
   "rsvpNote":     "Để chúng mình chuẩn bị chỗ ngồi chu đáo nhất, bạn phản hồi giúp mình nhé.",
   "rsvpDeadline": "Vui lòng phản hồi trước ngày 15.09.2026",
-  /* Dán link Google Apps Script Web App vào đây (xem HUONG-DAN.md) */
-  "rsvpEndpoint": "",
+  /* Link Google Apps Script Web App — nơi nhận câu trả lời của khách.
+     Đã nối vào Sheet "RSVP Thảo Anh - Đức Đạo". Đổi link thì đổi ở đây. */
+  "rsvpEndpoint": "https://script.google.com/macros/s/AKfycbxzch07pKw8bBz1hD3uSs3ssuSp5H6sacn8G8Py_bKaCfW37OEIjhJQ1Fs1Bt9y16pGsQ/exec",
   "sheetUrl":     "https://docs.google.com/spreadsheets/d/1B4VvgbQv_Kkjb13hmBOgkiBiWfECoEcoo3om_atcmyo/edit",
 
   "wishesScript": "Sổ lưu bút",
@@ -546,6 +569,24 @@ footer .f-tag{margin-top:30px;font-size:10px;letter-spacing:.34em;text-transform
 }
 #editor button:hover{background:var(--olive);color:var(--white)}
 #editor .hint{font-size:11.5px;color:var(--ink-2);line-height:1.7;background:rgba(192,160,236,.18);padding:10px 12px;margin-bottom:15px}
+/* bộ màu có sẵn */
+#editor .presets{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#editor button.preset{
+  flex:none;display:flex;flex-direction:column;align-items:flex-start;gap:6px;
+  padding:9px 10px;text-transform:none;letter-spacing:.02em;font-size:11px;line-height:1.3;text-align:left
+}
+#editor button.preset .dots{display:flex;gap:3px}
+#editor button.preset .dots i{width:12px;height:12px;border-radius:50%;border:1px solid rgba(0,0,0,.14)}
+/* ô chọn màu + ô mã hex */
+#editor .colorrow{display:flex;gap:6px;align-items:stretch}
+#editor .colorrow input[type=color]{
+  width:44px;flex:none;padding:2px;height:34px;cursor:pointer;background:var(--white)
+}
+#editor .colorrow input.hex{flex:1;font-family:var(--mono);text-transform:uppercase}
+#editor select{
+  width:100%;font-family:var(--mono);font-weight:300;font-size:12.5px;color:var(--ink);
+  background:var(--white);border:1px solid var(--line);padding:9px 11px;border-radius:0
+}
 </style>
 </head>
 <body>
@@ -844,7 +885,153 @@ try{
   }
 }catch(e){}
 
-/* ══════════════════ 1 · CÁNH HOA ══════════════════ */
+/* ══════════════════ 1 · GIAO DIỆN (MÀU & PHÔNG CHỮ) ══════════════════ */
+
+/* 4 bộ màu bấm-là-đổi trong bảng chỉnh sửa */
+var THEME_PRESETS = [
+  { id:"monet",  ten:"Vườn Monet",
+    main:"#5D6B2C", accent:"#C0A0EC", mark:"#D98D97", paper:"#F2EDE0", ink:"#26261F",
+    fontScript:"Dancing Script", fontBody:"IBM Plex Mono" },
+  { id:"giatien", ten:"Hồng đào & Nâu óc chó",
+    main:"#6B4E3D", accent:"#E8B7A7", mark:"#C98977", paper:"#FBF6EE", ink:"#3A2E28",
+    fontScript:"Dancing Script", fontBody:"Be Vietnam Pro" },
+  { id:"bien",   ten:"Biển",
+    main:"#3E6B72", accent:"#A8CBD1", mark:"#D98D97", paper:"#F4F1E9", ink:"#22302F",
+    fontScript:"Pacifico", fontBody:"IBM Plex Mono" },
+  /* main đã chỉnh đậm hơn một nấc (#7A7466 -> #6E6859) để nhãn chữ nhỏ
+     đạt tương phản 5.05, thay vì 4.23 tức dưới ngưỡng đọc được */
+  { id:"kem",    ten:"Kem tối giản",
+    main:"#6E6859", accent:"#C9C2B2", mark:"#A88970", paper:"#F7F4ED", ink:"#2B2A25",
+    fontScript:"Cormorant Garamond", fontBody:"Be Vietnam Pro" }
+];
+
+/* Phông chữ được phép chọn. Tất cả đều đã kiểm tra là có đủ dấu tiếng Việt
+   trên Google Fonts. Giá trị bên phải là chuỗi tải font. */
+var FONT_SCRIPT = {
+  "Dancing Script":     "Dancing+Script:wght@400;500;600;700",
+  "Pacifico":           "Pacifico",
+  "Playfair Display":   "Playfair+Display:ital,wght@0,400;0,500;1,400;1,500",
+  "Cormorant Garamond": "Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500",
+  "Lora":               "Lora:ital,wght@0,400;0,500;1,400;1,500"
+};
+var FONT_BODY = {
+  "IBM Plex Mono":  "IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400",
+  "Be Vietnam Pro": "Be+Vietnam+Pro:wght@200;300;400;500;600",
+  "Roboto Mono":    "Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300",
+  "JetBrains Mono": "JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300",
+  "Quicksand":      "Quicksand:wght@300;400;500;600",
+  "Nunito Sans":    "Nunito+Sans:ital,wght@0,300;0,400;0,600;1,300",
+  "Space Grotesk":  "Space+Grotesk:wght@300;400;500"
+};
+var FONT_FALLBACK = {
+  "Dancing Script":"cursive", "Pacifico":"cursive",
+  "Playfair Display":"Georgia,serif", "Cormorant Garamond":"Georgia,serif", "Lora":"Georgia,serif",
+  "IBM Plex Mono":'ui-monospace,"Courier New",monospace',
+  "Roboto Mono":'ui-monospace,"Courier New",monospace',
+  "JetBrains Mono":'ui-monospace,"Courier New",monospace',
+  "Be Vietnam Pro":"system-ui,sans-serif", "Quicksand":"system-ui,sans-serif",
+  "Nunito Sans":"system-ui,sans-serif", "Space Grotesk":"system-ui,sans-serif"
+};
+
+/* hex -> {h,s,l} và ngược lại, để suy ra sắc độ đậm/nhạt từ 1 màu */
+function hexToHsl(hex){
+  var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(String(hex).trim());
+  if(!m) return null;
+  var r=parseInt(m[1],16)/255, g=parseInt(m[2],16)/255, b=parseInt(m[3],16)/255;
+  var mx=Math.max(r,g,b), mn=Math.min(r,g,b), h=0, s=0, l=(mx+mn)/2, d=mx-mn;
+  if(d){
+    s = l>0.5 ? d/(2-mx-mn) : d/(mx+mn);
+    if(mx===r)      h=((g-b)/d + (g<b?6:0));
+    else if(mx===g) h=((b-r)/d + 2);
+    else            h=((r-g)/d + 4);
+    h/=6;
+  }
+  return {h:h,s:s,l:l};
+}
+function hslToHex(h,s,l){
+  var f = function(n){
+    var k=(n+h*12)%12, a=s*Math.min(l,1-l);
+    var v = l - a*Math.max(-1, Math.min(k-3, Math.min(9-k, 1)));
+    return Math.round(Math.max(0,Math.min(1,v))*255).toString(16).padStart(2,"0");
+  };
+  return "#"+f(0)+f(8)+f(4);
+}
+/* Suy ra sắc độ đậm/nhạt từ một màu.
+   dl < 0 = tối đi, dl > 0 = sáng lên. sf = hệ số bão hoà (mặc định 1).
+   Các con số dùng trong applyTheme() được canh sao cho bộ màu "Vườn Monet"
+   tái tạo gần đúng bảng màu chọn tay ban đầu, nên diện mạo mặc định
+   không đổi khi bật phần giao diện này lên. */
+function shade(hex,dl,sf){
+  var c = hexToHsl(hex);
+  if(!c) return hex;
+  return hslToHex(c.h,
+    Math.max(0, Math.min(1, c.s * (sf==null?1:sf))),
+    Math.max(0, Math.min(1, c.l + dl)));
+}
+function hexToRgba(hex,a){
+  var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(String(hex).trim());
+  if(!m) return "rgba(38,38,31,"+a+")";
+  return "rgba("+parseInt(m[1],16)+","+parseInt(m[2],16)+","+parseInt(m[3],16)+","+a+")";
+}
+
+/* Đổ màu & phông chữ đã chọn vào các biến CSS.
+   Giá trị gốc trong :root{} vẫn là mặc định nếu CONFIG thiếu "theme". */
+function applyTheme(){
+  var t = CONFIG.theme;
+  if(!t) return;
+  var root = document.documentElement.style;
+  var set  = function(name,val){ if(val) root.setProperty(name,val); };
+
+  if(t.main){
+    set("--olive",   t.main);
+    set("--olive-d", shade(t.main,-0.09));
+    set("--olive-l", shade(t.main, 0.18, 0.68));
+  }
+  if(t.accent){
+    set("--lav",   t.accent);
+    set("--lav-d", shade(t.accent,-0.19, 0.62));
+  }
+  if(t.mark){
+    set("--pink",   t.mark);
+    set("--pink-d", shade(t.mark,-0.13, 0.72));
+  }
+  if(t.paper){
+    set("--paper",   t.paper);
+    set("--paper-2", shade(t.paper,-0.047, 0.86));
+    set("--card",    shade(t.paper, 0.037));
+    set("--white",   shade(t.paper, 0.07));
+  }
+  if(t.ink){
+    set("--ink",   t.ink);
+    set("--ink-2", shade(t.ink, 0.198, 0.9));
+    set("--line",  hexToRgba(t.ink,.16));
+  }
+
+  /* phông chữ: đặt biến CSS rồi nạp thêm font từ Google nếu cần */
+  var fam = [];
+  if(t.fontScript && FONT_SCRIPT[t.fontScript]){
+    set("--script", '"'+t.fontScript+'",'+(FONT_FALLBACK[t.fontScript]||"cursive"));
+    if(t.fontScript !== "Dancing Script") fam.push(FONT_SCRIPT[t.fontScript]);
+  }
+  if(t.fontBody && FONT_BODY[t.fontBody]){
+    set("--mono", '"'+t.fontBody+'",'+(FONT_FALLBACK[t.fontBody]||"sans-serif"));
+    if(t.fontBody !== "IBM Plex Mono") fam.push(FONT_BODY[t.fontBody]);
+  }
+  var link = document.getElementById("themeFonts");
+  if(fam.length){
+    var href = "https://fonts.googleapis.com/css2?family="+fam.join("&family=")+"&display=swap";
+    if(!link){
+      link = document.createElement("link");
+      link.id = "themeFonts"; link.rel = "stylesheet";
+      document.head.appendChild(link);
+    }
+    if(link.href !== href) link.href = href;
+  }else if(link){
+    link.remove();
+  }
+}
+
+/* ══════════════════ 2 · CÁNH HOA ══════════════════ */
 function initPetals(){
   if(REDUCED) return;
   var box=$("#petals"); if(!box) return;
@@ -862,7 +1049,7 @@ function initPetals(){
   }
 }
 
-/* ══════════════════ 2 · RENDER ══════════════════ */
+/* ══════════════════ 3 · RENDER ══════════════════ */
 function pics(){ return (CONFIG.gallery||[]).map(function(s){return String(s||"").trim();}).filter(Boolean); }
 function pic(i){ var p=pics(); return p.length ? p[i % p.length] : ""; }
 /* ảnh cho một vị trí nổi bật; không đặt thì lấy tạm ảnh thứ i trong album */
@@ -881,9 +1068,26 @@ function polaroid(src,cap,tapeCls,rot,w){
   '</figure>';
 }
 
+/* Mã QR chuyển khoản: ưu tiên ảnh tự upload, không có thì sinh bằng VietQR */
+function qrUrl(a){
+  if(a.qr && String(a.qr).trim()) return imgUrl(a.qr,500);
+  var code = String(a.bankCode||"").trim();
+  var num  = String(a.number||"").replace(/\D/g,"");
+  if(!code || !num || /^0+$/.test(num)) return "";
+  return "https://img.vietqr.io/image/"+encodeURIComponent(code)+"-"+num+"-compact2.png"+
+         "?accountName="+encodeURIComponent(khongDau(a.name||""))+
+         "&addInfo="+encodeURIComponent(khongDau("Mung cuoi "+CONFIG.bride+" "+CONFIG.groom));
+}
+/* bỏ dấu tiếng Việt — VietQR chỉ nhận chữ không dấu */
+function khongDau(s){
+  return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/đ/g,"d").replace(/Đ/g,"D").toUpperCase();
+}
+
 function render(){
   var C = CONFIG, P = pics();
   document.title = C.bride+" & "+C.groom+" — Thiệp cưới";
+  applyTheme();
 
   /* hero */
   setText("heroKicker", C.heroKicker);
@@ -981,13 +1185,16 @@ function render(){
   setText("giftNote",   C.giftNote);
   var gf=$("#giftGrid");
   if(gf) gf.innerHTML = (C.giftAccounts||[]).map(function(a){
+    var qr = qrUrl(a);
     return '<div class="gift note">'+
       '<div class="who">'+esc(a.who)+'</div>'+
       '<div class="bank">'+esc(a.bank)+'</div>'+
       '<div class="nm">'+esc(a.name)+'</div>'+
       '<div class="no" data-copy="'+esc(String(a.number).replace(/\s/g,""))+'" title="Bấm để sao chép">'+esc(a.number)+'</div>'+
       '<div class="hint">Bấm để sao chép</div>'+
-      (a.qr ? '<img class="qr" src="'+esc(imgUrl(a.qr,500))+'" alt="Mã QR '+esc(a.who)+'" loading="lazy">' : '')+
+      /* nếu VietQR không tải được thì ẩn ảnh đi, số tài khoản bấm-copy vẫn còn */
+      (qr ? '<img class="qr" src="'+esc(qr)+'" alt="Mã QR chuyển khoản '+esc(a.who)+'"'+
+            ' loading="lazy" onerror="this.style.display=\'none\'">' : '')+
     '</div>';
   }).join("");
 
@@ -1034,14 +1241,14 @@ function render(){
   renderWishes();
 }
 
-/* ══════════════════ 3 · NÉT GẠCH CHÂN VIẾT TAY ══════════════════ */
+/* ══════════════════ 4 · NÉT GẠCH CHÂN VIẾT TAY ══════════════════ */
 function initHandUnderlines(){
   $$(".hand svg path").forEach(function(p){
     try{ p.style.setProperty("--len", Math.ceil(p.getTotalLength())); }catch(e){}
   });
 }
 
-/* ══════════════════ 4 · CHUYỂN ĐỘNG KHI LƯỚT ══════════════════ */
+/* ══════════════════ 5 · CHUYỂN ĐỘNG KHI LƯỚT ══════════════════ */
 /* Hiện dần theo vị trí cuộn. Cố tình KHÔNG dùng IntersectionObserver:
    nếu vì lý do nào đó nó không chạy thì cả trang sẽ trắng — dùng phép đo
    trực tiếp trong vòng lặp cuộn thì luôn chắc ăn. */
@@ -1100,7 +1307,7 @@ function initScrollFx(){
   frame();
 }
 
-/* ══════════════════ 5 · ĐẾM NGƯỢC ══════════════════ */
+/* ══════════════════ 6 · ĐẾM NGƯỢC ══════════════════ */
 var cdTimer=null;
 function startCountdown(){
   if(cdTimer) clearInterval(cdTimer);
@@ -1119,7 +1326,7 @@ function startCountdown(){
   tick(); cdTimer = setInterval(tick,1000);
 }
 
-/* ══════════════════ 6 · SỔ LƯU BÚT ══════════════════ */
+/* ══════════════════ 7 · SỔ LƯU BÚT ══════════════════ */
 var WISHES = [], REMOTE = null;
 try{ WISHES = JSON.parse(localStorage.getItem(LSKEY+"-wishes")||"[]") || []; }catch(e){ WISHES = []; }
 function pushWish(w){
@@ -1153,7 +1360,7 @@ function loadRemoteWishes(){
     .catch(function(){});
 }
 
-/* ══════════════════ 7 · GỬI RSVP ══════════════════ */
+/* ══════════════════ 8 · GỬI RSVP ══════════════════ */
 function initForm(){
   var form=$("#rsvpForm"); if(!form) return;
 
@@ -1220,7 +1427,7 @@ function initForm(){
   });
 }
 
-/* ══════════════════ 8 · NHẠC + COPY STK ══════════════════ */
+/* ══════════════════ 9 · NHẠC + COPY STK ══════════════════ */
 function initMisc(){
   var au=$("#bgm"), mb=$("#btnMusic");
   if(mb && au){
@@ -1240,8 +1447,16 @@ function initMisc(){
   });
 }
 
-/* ══════════════════ 9 · BẢNG CHỈNH SỬA ══════════════════ */
+/* ══════════════════ 10 · BẢNG CHỈNH SỬA ══════════════════ */
 var SCHEMA = [
+  {legend:"Giao diện", obj:"theme", presets:THEME_PRESETS,
+    labels:{main:"Màu chính (tiêu đề phụ, nút, chân trang)",
+            accent:"Màu điểm nhấn (băng dính, nhãn)",
+            mark:"Màu nét gạch chân viết tay",
+            paper:"Màu nền giấy", ink:"Màu chữ",
+            fontScript:"Phông chữ viết tay", fontBody:"Phông chữ nội dung"},
+    types:{main:"color",accent:"color",mark:"color",paper:"color",ink:"color"},
+    selects:{fontScript:Object.keys(FONT_SCRIPT), fontBody:Object.keys(FONT_BODY)}},
   {legend:"Cô dâu & chú rể", fields:[
     ["bride","Tên gọi cô dâu"],["groom","Tên gọi chú rể"],
     ["brideFull","Họ tên đầy đủ cô dâu"],["groomFull","Họ tên đầy đủ chú rể"],
@@ -1266,7 +1481,9 @@ var SCHEMA = [
   {legend:"Dress code", fields:[["dressScript","Tiêu đề"],["dressNote","Ghi chú",true]],
     list:"dressColors", labels:{hex:"Mã màu",name:"Tên màu"}},
   {legend:"Mừng cưới", fields:[["giftScript","Tiêu đề"],["giftNote","Ghi chú",true]],
-    list:"giftAccounts", labels:{who:"Của ai",bank:"Ngân hàng",name:"Chủ tài khoản",number:"Số tài khoản",qr:"Ảnh QR"}},
+    list:"giftAccounts", labels:{who:"Của ai",bankCode:"Mã ngân hàng (VCB, TCB, MB, ACB...)",
+      bank:"Tên ngân hàng hiển thị",name:"Chủ tài khoản (không dấu)",number:"Số tài khoản",
+      qr:"Ảnh QR tự chụp (để trống thì tự sinh)"}},
   {legend:"Hỏi đáp", fields:[["faqScript","Tiêu đề"]],
     list:"faq", labels:{q:"Câu hỏi",a:"Trả lời"}},
   {legend:"RSVP", fields:[
@@ -1296,11 +1513,40 @@ function buildEditor(){
                : '<input type="text" id="ed_'+key+'" data-key="'+key+'" value="'+esc(val)+'">')+
         '</div>');
     });
+    if(grp.presets){
+      html.push('<div class="row"><label>Bộ màu có sẵn — bấm để đổi</label><div class="presets">');
+      grp.presets.forEach(function(p){
+        html.push('<button type="button" class="preset" data-preset="'+esc(p.id)+'">'+
+          '<span class="dots">'+
+            '<i style="background:'+esc(p.main)+'"></i>'+
+            '<i style="background:'+esc(p.accent)+'"></i>'+
+            '<i style="background:'+esc(p.mark)+'"></i>'+
+            '<i style="background:'+esc(p.paper)+'"></i>'+
+          '</span>'+esc(p.ten)+'</button>');
+      });
+      html.push('</div></div>');
+    }
     if(grp.obj){
       var o = CONFIG[grp.obj] || (CONFIG[grp.obj] = {});
+      var types   = grp.types   || {};
+      var selects = grp.selects || {};
       Object.keys(grp.labels).forEach(function(k){
-        html.push('<div class="row"><label>'+esc(grp.labels[k])+'</label>'+
-          '<input type="text" data-obj="'+grp.obj+'" data-sub="'+k+'" value="'+esc(o[k]==null?"":o[k])+'"></div>');
+        var val = o[k]==null?"":o[k], input;
+        if(selects[k]){
+          input = '<select data-obj="'+grp.obj+'" data-sub="'+k+'">'+
+            selects[k].map(function(opt){
+              return '<option'+(opt===val?' selected':'')+'>'+esc(opt)+'</option>';
+            }).join("")+'</select>';
+        }else if(types[k]==="color"){
+          /* ô chọn màu + ô chữ, hai ô đồng bộ với nhau */
+          input = '<div class="colorrow">'+
+            '<input type="color" data-obj="'+grp.obj+'" data-sub="'+k+'" value="'+esc(val||"#000000")+'">'+
+            '<input type="text" class="hex" data-obj="'+grp.obj+'" data-sub="'+k+'" value="'+esc(val)+'" spellcheck="false">'+
+          '</div>';
+        }else{
+          input = '<input type="text" data-obj="'+grp.obj+'" data-sub="'+k+'" value="'+esc(val)+'">';
+        }
+        html.push('<div class="row"><label>'+esc(grp.labels[k])+'</label>'+input+'</div>');
       });
     }
     if(grp.list){
@@ -1322,6 +1568,11 @@ function buildEditor(){
 
   body.innerHTML = html.join("");
 
+  /* Chỉ gắn listener đúng một lần. buildEditor() còn được gọi lại khi bấm
+     bộ màu có sẵn — gắn lại mỗi lần sẽ khiến listener nhân lên. */
+  if(body.dataset.bound) return;
+  body.dataset.bound = "1";
+
   body.addEventListener("input", function(e){
     var t=e.target;
     if(t.id==="ed_gallery"){
@@ -1329,6 +1580,11 @@ function buildEditor(){
     }else if(t.dataset.obj){
       if(!CONFIG[t.dataset.obj]) CONFIG[t.dataset.obj] = {};
       CONFIG[t.dataset.obj][t.dataset.sub] = t.value;
+      /* ô chọn màu và ô mã hex là hai ô của cùng một giá trị — đồng bộ chúng */
+      $$('[data-obj="'+t.dataset.obj+'"][data-sub="'+t.dataset.sub+'"]', body)
+        .forEach(function(other){
+          if(other!==t && other.value!==t.value) other.value = t.value;
+        });
     }else if(t.dataset.list){
       var a = CONFIG[t.dataset.list];
       if(a && a[t.dataset.idx]) a[t.dataset.idx][t.dataset.sub] = t.value;
@@ -1337,6 +1593,22 @@ function buildEditor(){
     }else return;
     saveDraft(); render(); startCountdown();
     $$("[data-anim],.stagger,.hand").forEach(function(el){el.classList.add("in");});
+  });
+
+  /* bấm một bộ màu có sẵn */
+  body.addEventListener("click", function(e){
+    var btn = e.target.closest && e.target.closest("[data-preset]");
+    if(!btn) return;
+    var p = THEME_PRESETS.filter(function(x){ return x.id === btn.dataset.preset; })[0];
+    if(!p) return;
+    CONFIG.theme = {
+      main:p.main, accent:p.accent, mark:p.mark, paper:p.paper, ink:p.ink,
+      fontScript:p.fontScript, fontBody:p.fontBody
+    };
+    saveDraft(); render(); startCountdown();
+    $$("[data-anim],.stagger,.hand").forEach(function(el){el.classList.add("in");});
+    buildEditor();          /* dựng lại bảng để các ô hiện đúng màu mới */
+    $("#editor").classList.add("open");
   });
 }
 function saveDraft(){
@@ -1379,7 +1651,7 @@ function initEditor(){
   panel.classList.add("open");
 }
 
-/* ══════════════════ 10 · KHỞI CHẠY ══════════════════ */
+/* ══════════════════ 11 · KHỞI CHẠY ══════════════════ */
 initPetals();
 render();
 startCountdown();
