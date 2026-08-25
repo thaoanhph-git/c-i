@@ -60,7 +60,7 @@ var CONFIG = {
   "brideFather":  "Phạm Anh Tuấn",
   "brideMother":  "Lê Thị Hà",
   "groomFather":  "Phạm Hùng",
-  "groomMother":  "",          /* ⚠️ chưa có tên mẹ chú rể — điền vào đây */
+  "groomMother":  "",          /* để trống thì thiệp chỉ ghi tên bố */
   "initials":     "Đ & A",     /* chữ lồng trên dấu sáp trước phần trả lời */
 
   /* ── Ngày giờ ────────────────────────────────────────────────── */
@@ -131,12 +131,11 @@ var CONFIG = {
 
   /* ── Dress code ──────────────────────────────────────────────── */
   "dressScript": "Dress code",
-  "dressNote":   "Bọn mình sẽ rất vui nếu bạn diện tông màu vintage cùng chúng mình — xanh olive, tím mauve, điểm hồng phớt và be.",
+  "dressNote":   "Bọn mình sẽ rất vui nếu bạn diện tông màu vintage cùng chúng mình — xanh olive, tím mauve, điểm hồng phớt và kem.",
   "dressColors": [
     { "hex": "#5D6B2C", "name": "Xanh olive" },
     { "hex": "#8B6F9E", "name": "Tím mauve" },
     { "hex": "#E3BFC4", "name": "Hồng phớt" },
-    { "hex": "#D8C9AE", "name": "Be" },
     { "hex": "#F4EEE0", "name": "Kem" }
   ],
 
@@ -152,7 +151,7 @@ var CONFIG = {
     /* ── ảnh cho màn hình phong bì ─────────────────────────────── */
     "envelope":     "anh-web/phong-bi.jpg",       /* bìa mở đầu               */
     "invite":       "anh-web/thiep-moi.jpg",      /* trang thiệp chính        */
-    "inviteMobile": "anh-web/thiep-moi-can.jpg",  /* bản cận cảnh cho điện thoại */
+    "inviteMobile": "anh-web/thiep-moi-doc.jpg",  /* bản khổ dọc cho điện thoại */
     "envPaint":     "anh-web/nen.jpg",            /* tranh nền phía sau bìa   */
     "detailPhoto1": "anh-web/head.jpg",       /* ảnh khung trên mục Chi tiết */
     "detailPhoto2": "anh-web/chinh-8.jpg",    /* ảnh khung dưới mục Chi tiết */
@@ -299,6 +298,8 @@ section{position:relative;padding:clamp(66px,9vw,116px) 22px}
   display:flex;align-items:center;justify-content:center;
   transition:opacity .85s ease, transform 1.15s cubic-bezier(.4,0,.2,1)
 }
+/* bấm chỗ nào trên màn mở đầu cũng vào thiệp, nên cả lớp bìa là chỗ bấm */
+.env-lop-bia{cursor:pointer}
 .env-lop-thiep{opacity:0;transform:scale(.84);pointer-events:none}
 #envelope.opening .env-lop-bia{opacity:0;transform:scale(1.32);pointer-events:none}
 #envelope.opening .env-lop-thiep{opacity:1;transform:scale(1)}
@@ -1348,8 +1349,8 @@ function render(){
   var th=$("#envThiep");
   if(th){
     var hep = window.matchMedia("(max-width:700px)");
-    var aRong = imgUrl(Fe.invite       || "anh-web/thiep-moi.jpg", 1800);
-    var aHep  = imgUrl(Fe.inviteMobile || "anh-web/thiep-moi-can.jpg", 1400);
+    var aRong = imgUrl(Fe.invite       || "anh-web/thiep-moi.jpg", 2200);
+    var aHep  = imgUrl(Fe.inviteMobile || "anh-web/thiep-moi-doc.jpg", 1700);
     var chonAnh = function(){
       var u = hep.matches ? aHep : aRong;
       if(th.getAttribute("src") !== u) th.src = u;
@@ -1600,16 +1601,19 @@ function initEnvelope(){
   var tat = EDITING || (CONFIG.sections && CONFIG.sections.envelope === false);
   if(tat){ env.remove(); document.body.classList.remove("locked"); return; }
 
-  /* Khoá cuộn tới khi bấm dấu sáp, để khách không lướt vụt qua màn mở đầu */
+  /* Khoá cuộn tới khi mở, để khách không lướt vụt qua màn mở đầu */
   document.body.classList.add("locked");
   var daMo = false;
   function mo(){
     if(daMo) return;
     daMo = true;
-    env.classList.add("opening");   /* phong bì mờ đi, tấm thiệp hiện ra */
+    env.classList.add("opening");   /* bìa mờ đi, trang thiệp hiện ra */
     document.body.classList.remove("locked");
   }
-  if(seal) seal.addEventListener("click", mo);
+  /* Bấm CHỖ NÀO trên màn mở đầu cũng vào thiệp, không phải nhắm trúng dấu sáp.
+     Nút dấu sáp vẫn giữ để rê chuột vào có hiệu ứng và bấm bằng bàn phím được;
+     sự kiện nổi lên khối cha nên biến daMo chặn không cho chạy hai lần. */
+  env.addEventListener("click", mo);
   document.addEventListener("keydown", function(e){
     if((e.key==="Enter"||e.key===" ") && document.body.classList.contains("locked")){
       e.preventDefault(); mo();
@@ -1899,7 +1903,7 @@ var SCHEMA = [
   ]},
   {legend:"Ảnh nổi bật", obj:"featured", labels:{
     envelope:"Bìa mở đầu", invite:"Trang thiệp chính",
-    inviteMobile:"Trang thiệp (điện thoại)", envPaint:"Tranh nền phía sau",
+    inviteMobile:"Trang thiệp (điện thoại, khổ dọc)", envPaint:"Tranh nền phía sau",
     detailPhoto1:"Ảnh khung trên (Chi tiết)", detailPhoto2:"Ảnh khung dưới (Chi tiết)",
     detailKey:"Chìa khoá tách nền",
     seal:"Con dấu sáp", heart:"Trái tim ren", detailCard:"Thẻ chi tiết đám cưới",
